@@ -24,16 +24,16 @@ class Application:
 
         self.locationBtn = tk.CTkButton(
             self.root, text="Get Details", width=WIDTH, height=HEIGHT, command=self.getDetails)
-        self.addTrustedContacts = tk.CTkButton(
+        self.showLocations = tk.CTkButton(
             self.root, text="Show Locations", width=WIDTH, height=HEIGHT, command=self.getLocations)
-        self.removeTrustedContacts = tk.CTkButton(
+        self.activeRequest = tk.CTkButton(
             self.root, text="Active Requests", width=WIDTH, height=HEIGHT, command=self.activeRequests)
         self.requestLog = tk.CTkButton(
             self.root, text="Requests Log", width=WIDTH, height=HEIGHT, command=self.getLog)
 
         self.locationBtn.grid(row=0, column=0, padx=10, pady=10)
-        self.addTrustedContacts.grid(row=0, column=1, padx=10, pady=10)
-        self.removeTrustedContacts.grid(row=1, column=0, padx=10, pady=10)
+        self.showLocations.grid(row=0, column=1, padx=10, pady=10)
+        self.activeRequest.grid(row=1, column=0, padx=10, pady=10)
         self.requestLog.grid(row=1, column=1, padx=10, pady=10)
 
         self.root.resizable(False, False)
@@ -127,7 +127,7 @@ class Application:
             data = json.load(f)
             if request_id in data["pending"]:
                 resolved_request = data["pending"].pop(request_id)
-                data["resolved"][request_id] = resolved_request
+                data["resolved"].append(resolved_request)
                 f.seek(0)
                 json.dump(data, f, indent=4)
                 f.truncate()
@@ -141,7 +141,7 @@ class Application:
         with open("db\\vehicle_database.json", 'w') as f:
             json.dump(data, f, indent=4)
 
-        logger.info(f"CUSTOM {request_id} is resolved")
+        logger.info(f"{request_id} is resolved")
 
     def getLog(self):
         self.root.withdraw()

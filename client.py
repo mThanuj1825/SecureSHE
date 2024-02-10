@@ -58,7 +58,7 @@ class Application:
         with open("db\\pending_requests.json", 'w') as f:
             json.dump(data, f, indent=4)
 
-        logger.info(f"CUSTOM {ID} requested assistance. Vehicle: {vehicle}")
+        logger.info(f"{ID} requested assistance. Vehicle: {vehicle}")
 
     def addContacts(self):
         self.root.withdraw()
