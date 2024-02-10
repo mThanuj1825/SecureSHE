@@ -133,18 +133,39 @@ class Application:
                 f.truncate()
                 self.newWindow.destroy()
                 self.root.deiconify()
-        
+
         with open("db\\vehicle_database.json", "r") as f:
             data = json.load(f)
         data[vehicle]['marked'] = False
-        
+
         with open("db\\vehicle_database.json", 'w') as f:
             json.dump(data, f, indent=4)
-        
+
         logger.info(f"CUSTOM {request_id} is resolved")
 
     def getLog(self):
-        pass
+        self.root.withdraw()
+        self.newWindow = tk.CTkToplevel(self.root)
+        self.newWindow.title("Log")
+        self.newWindow.geometry("700x400")
+
+        self.newWindow.protocol("WM_DELETE_WINDOW", self.closeNewWindow)
+
+        with open("db\\log.log") as f:
+            data = f.read()
+
+        scrollbar = tk.CTkScrollbar(self.newWindow)
+        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+
+        text_area = tk.CTkTextbox(self.newWindow, yscrollcommand=scrollbar.set)
+        text_area.pack(fill=tk.BOTH)
+        text_area.insert(tk.END, data)
+
+        scrollbar.configure(command=text_area.yview)
+
+        self.closeButton = tk.CTkButton(self.newWindow, text="Close", font=(
+            "Arial", 15), command=self.closeNewWindow)
+        self.closeButton.pack(pady=10)
 
     def closeNewWindow(self):
         self.stop_thread = True
